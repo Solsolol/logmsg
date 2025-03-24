@@ -1,7 +1,7 @@
 {
     "workflowApiVersion": "1.1",
     "metaData": {
-       "icon": "https://sfmcloggerwebapp.herokuapp.com/images/icon-actual.png",
+       "icon": "https://logmsg-51403f53f860.herokuapp.com/images/icon-actual.png",
        "iconSmall": "",
        "category": "message"
     },
@@ -19,7 +19,7 @@
                     "ContactKey":"{{Contact.Key}}"
                 }
             ],
-            "url": "https://sfmcloggerwebapp.herokuapp.com/execute",
+            "url": "https://logmsg-51403f53f860.herokuapp.com/execute",
             "verb":"POST"
         }
     },
@@ -31,22 +31,22 @@
             "customerKey": "aqpwoiuybhjbvailuhcxyuyiu"
        },
        "publish": {
-            "url": "https://sfmcloggerwebapp.herokuapp.com/publish",
+            "url": "https://logmsg-51403f53f860.herokuapp.com/publish",
             "verb":"POST",
             "useJwt":true,
             "customerKey": "aqpwoiuybhjbvailuhcxyuyiu"
        },
        "validate": {
-            "url": "https://sfmcloggerwebapp.herokuapp.com/validate",
+            "url": "https://logmsg-51403f53f860.herokuapp.com/validate",
             "verb":"POST",
             "useJwt":true,
             "customerKey": "aqpwoiuybhjbvailuhcxyuyiu"
        },
        "stop": {
-            "url": "https://sfmcloggerwebapp.herokuapp.com/stop",
+            "url": "https://logmsg-51403f53f860.herokuapp.com/stop",
             "verb":"POST",
             "useJwt":true,
-            "customerKey": "aqpwoiuybhjbvailuhcxyuyiu"
+            "customerKey": "39d2ab8b-11ed-4176-ba4d-4f1ea602e1ec"
        }
     },
     "wizardSteps": [
