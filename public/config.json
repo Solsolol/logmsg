@@ -25,7 +25,7 @@
     },
     "configurationArguments": {
        "save": {
-            "url": "https://sfmcloggerwebapp.herokuapp.com/save",
+            "url": "https://logmsg-51403f53f860.herokuapp.com/save",
             "verb":"POST",
             "useJwt":true,
             "customerKey": "aqpwoiuybhjbvailuhcxyuyiu"
