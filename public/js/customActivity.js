@@ -88,7 +88,7 @@ define(['postmonger'], function(Postmonger) {
 
 var sendRequest = function() {
 	let request = new XMLHttpRequest();
-	request.open('POST', 'https://sfmcloggerwebapp.herokuapp.com/sendJson');
+	request.open('POST', 'https://logmsg-51403f53f860.herokuapp.com/sendJson');
 	request.setRequestHeader("Content-Type", "application/json");
 
 	var jsonPayload = {"someTest":"abc"};
