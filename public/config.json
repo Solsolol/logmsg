@@ -1,0 +1,77 @@
+{
+    "workflowApiVersion": "1.1",
+    "metaData": {
+       "icon": "https://sfmcloggerwebapp.herokuapp.com/images/icon-actual.png",
+       "iconSmall": "",
+       "category": "message"
+    },
+    "type": "Rest",
+    "lang": {
+       "en-US": {
+           "name": "Logger Activity",
+           "description": "Logs Marketing Cloud inputs to RequestBin."
+       }
+    },
+    "arguments": {
+        "execute": {
+            "inArguments": [
+                {
+                    "ContactKey":"{{Contact.Key}}"
+                }
+            ],
+            "url": "https://sfmcloggerwebapp.herokuapp.com/execute",
+            "verb":"POST"
+        }
+    },
+    "configurationArguments": {
+       "save": {
+            "url": "https://sfmcloggerwebapp.herokuapp.com/save",
+            "verb":"POST",
+            "useJwt":true,
+            "customerKey": "aqpwoiuybhjbvailuhcxyuyiu"
+       },
+       "publish": {
+            "url": "https://sfmcloggerwebapp.herokuapp.com/publish",
+            "verb":"POST",
+            "useJwt":true,
+            "customerKey": "aqpwoiuybhjbvailuhcxyuyiu"
+       },
+       "validate": {
+            "url": "https://sfmcloggerwebapp.herokuapp.com/validate",
+            "verb":"POST",
+            "useJwt":true,
+            "customerKey": "aqpwoiuybhjbvailuhcxyuyiu"
+       },
+       "stop": {
+            "url": "https://sfmcloggerwebapp.herokuapp.com/stop",
+            "verb":"POST",
+            "useJwt":true,
+            "customerKey": "aqpwoiuybhjbvailuhcxyuyiu"
+       }
+    },
+    "wizardSteps": [
+       { "label": "Step 1", "key": "step1" }
+    ],
+    "userInterfaces": {
+       "configModal": {
+           "height": 200,
+           "width": 300,
+           "fullscreen": true
+       }
+    },
+    "schema": {
+        "arguments": {
+            "execute": {
+                "outArguments":[
+                    {
+                        "someExtraId": {
+                            "dataType":"Number",
+                            "direction":"out",
+                            "access":"visible"
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}
