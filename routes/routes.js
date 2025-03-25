@@ -44,13 +44,13 @@ var validateConfigurations = function(requestPayload, pathEndpoint) {
 
     if (!requestPayload.inArguments || !Array.isArray(requestPayload.inArguments)) {
         console.error("Erreur : inArguments est manquant ou incorrect.");
-        return { success: false, message: "Champ 'inArguments' invalide." };
+        return { success: false, message: "Champ inArguments invalide." };
     }
 
     for (const arg of requestPayload.inArguments) {
         if (!arg || typeof arg !== "object") {
-            console.error("Erreur : Un élément de 'inArguments' n'est pas un objet valide.");
-            return { success: false, message: "Format incorrect dans 'inArguments'." };
+            console.error("Erreur : Un élément de inArguments n est pas un objet valide.");
+            return { success: false, message: "Format incorrect dans inArguments." };
         }
     }
 
