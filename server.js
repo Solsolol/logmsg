@@ -4,18 +4,24 @@ const routes = require('./routes/routes.js');
 
 var app = express();
 app.use(express.static('public'));
-const port = process.env.PORT || 8080;
 
+const port = process.env.PORT || 8080;
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true })); // Ajout pour POST
+
 app.use('/', routes);
 app.use('/icon.png', express.static('public/images/icon.png'));
 
-// GET request to web application, will always load up the web application
+// GET request pour tester si le serveur tourne bien
 app.get('/', function(req, res) {
-	res.sendStatus(200);
-
+    res.send("Server is running on port " + port);
 });
 
-app.listen(port, () => {
-	console.log(`Listening on port #${port}`);
-})
+// Lancement du serveur avec gestion des erreurs
+app.listen(port, (err) => {
+    if (err) {
+        console.error("❌ Erreur lors du démarrage du serveur:", err);
+    } else {
+        console.log(`✅ Serveur démarré sur http://localhost:${port}`);
+    }
+});
