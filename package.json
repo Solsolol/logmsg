@@ -1,5 +1,5 @@
 {
-  "name": "logger-sfmc",
+  "name": "logger",
   "version": "1.0.0",
   "description": "This is a random custom activity web application that will be used to demonstrate Salesforce Marketing Cloud's Journey Builder capabilities.",
   "main": "server.js",
