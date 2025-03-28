@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const routes = express.Router();
 const fs = require('fs');
 
@@ -97,8 +98,8 @@ routes.post('/execute', function(req, res, next) {
     res.status(201).json({ "someExtraId": id });
 });
 
-// Routes POST pour save, validate, stop, publish, sendJson, processData
-const postEndpoints = ["save", "validate", "stop", "publish", "sendJson"];
+// Routes POST pour save, validate, stop, publish, processData
+const postEndpoints = ["save", "validate", "stop", "publish"];
 postEndpoints.forEach(endpoint => {
     routes.post(`/${endpoint}`, function(req, res, next) {
         console.log(`[POST] /${endpoint} - Requête reçue`, req.body);
@@ -112,7 +113,22 @@ postEndpoints.forEach(endpoint => {
     });
 });
 
-// POST request for processData (génération d’un ID)
+// Route spécifique pour sendJson
+routes.post('/sendJson', function(req, res, next) {
+    console.log("[POST] /sendJson - Requête reçue", req.body);
+    if (!req.body || Object.keys(req.body).length === 0) {
+        console.error("[ERROR] Données vides!");
+        return res.status(400).json({ error: "Données invalides ou absentes." });
+    }
+    console.log("[SUCCESS] Données reçues et validées.");
+    res.status(200).json({ 
+        success: true, 
+        message: "Données reçues avec succès",
+        data: req.body 
+    });
+});
+
+// POST request for processData (génération d'un ID)
 routes.post('/processData', function(req, res, next) {
     console.log("[POST] /processData - Génération d'un ID");
     var id = Math.floor(Math.random() * 1000);
