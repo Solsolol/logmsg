@@ -88,17 +88,32 @@ define(['postmonger'], function(Postmonger) {
 
 var sendRequest = function() {
 	let request = new XMLHttpRequest();
-	request.open('POST', 'https://logmsg-51403f53f860.herokuapp.com/sendJson');
+	request.open('POST', '/sendJson');
 	request.setRequestHeader("Content-Type", "application/json");
 
-	var jsonPayload = {"someTest":"abc"};
+	var jsonPayload = {
+		firstName: document.getElementById('firstName').value,
+		lastName: document.getElementById('lastName').value,
+		company: document.getElementById('company').value,
+		phoneNumber: document.getElementById('phoneNumber').value,
+		keyvalstatic: document.getElementById('keyvalstatic').value,
+		keyvaldynamic: document.getElementById('keyvaldynamic').value
+	};
+
 	request.send(JSON.stringify(jsonPayload));
+	
 	request.onload = () => {
-		console.log(request);
-		if(request.status === 200 || request.status === 201) {
-			console.log("It works!");
+		if (request.status === 200 || request.status === 201) {
+			console.log("Request successful!");
+			document.getElementById('testArea').value = JSON.stringify(jsonPayload, null, 2);
 		} else {
-			console.log(`error ${request.status} ${request.statusText}`);
+			console.error("Request failed with status:", request.status);
+			document.getElementById('testArea').value = "Error: Request failed with status " + request.status;
 		}
+	};
+
+	request.onerror = () => {
+		console.error("Request failed");
+		document.getElementById('testArea').value = "Error: Request failed";
 	};
 };
