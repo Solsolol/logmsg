@@ -8,7 +8,7 @@
     "type": "Rest",
     "lang": {
        "en-US": {
-           "name": "Logger Activity",
+           "name": "Logger",
            "description": "Logs Marketing Cloud inputs to RequestBin."
        }
     },
@@ -28,25 +28,25 @@
             "url": "https://logmsg-51403f53f860.herokuapp.com/save",
             "verb":"POST",
             "useJwt":true,
-            "customerKey": "39d2ab8b-11ed-4176-ba4d-4f1ea602e1ec"
+            "customerKey": "0294cbf8-2023-4770-970c-87e013488d7c"
        },
        "publish": {
             "url": "https://logmsg-51403f53f860.herokuapp.com/publish",
             "verb":"POST",
             "useJwt":true,
-            "customerKey": "39d2ab8b-11ed-4176-ba4d-4f1ea602e1ec"
+            "customerKey": "0294cbf8-2023-4770-970c-87e013488d7c"
        },
        "validate": {
             "url": "https://logmsg-51403f53f860.herokuapp.com/validate",
             "verb":"POST",
             "useJwt":true,
-            "customerKey": "39d2ab8b-11ed-4176-ba4d-4f1ea602e1ec"
+            "customerKey": "0294cbf8-2023-4770-970c-87e013488d7c"
        },
        "stop": {
             "url": "https://logmsg-51403f53f860.herokuapp.com/stop",
             "verb":"POST",
             "useJwt":true,
-            "customerKey": "39d2ab8b-11ed-4176-ba4d-4f1ea602e1ec"
+            "customerKey": "0294cbf8-2023-4770-970c-87e013488d7c"
        }
     },
     "wizardSteps": [
