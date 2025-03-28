@@ -1,33 +1,36 @@
-/****************************************************************************************************************
- * File: routes.js
- * 
- * Desc: JS file that contains all of the necessary GET and POST calls.
- * 
- *************************************************************************************************************/
-
-const routes = require('express').Router();
+const express = require('express');
+const routes = express.Router();
 const fs = require('fs');
 
-// Charger la configuration depuis config.json
+console.log("[SERVER] Chargement du fichier de configuration...");
 var configObj = JSON.parse(fs.readFileSync('./public/config.json', 'utf8'));
+console.log("[SERVER] Configuration chargée avec succès.");
+
+// Middleware pour parser le JSON
+routes.use(express.json());
+console.log("[SERVER] Middleware JSON activé.");
 
 // GET request to index.html
 routes.get('/', function(req, res, next) {
-    res.writeHead(200);
-    res.sendFile(__dirname + '/index.html');
+    console.log("[GET] / - Envoi du fichier index.html");
+    res.status(200).sendFile(__dirname + '/index.html');
 });
 
-// GET request to config.json - used for Journey Builder to load configurations
+// GET request to config.json
 routes.get('/config.json', function(req, res, next) {
+    console.log("[GET] /config.json - Envoi de la configuration");
     res.status(200).json(configObj);
 });
 
 // GET request for an image
 routes.get('/images/icon.png', function(req, res, next) {
+    console.log("[GET] /images/icon.png - Tentative de lecture de l'image");
     fs.readFile('./public/images/icon.png', function(err, data) {
         if (err) {
+            console.error("[ERROR] Image non trouvée");
             res.status(400).send("Image not found");
         } else {
+            console.log("[SUCCESS] Image trouvée et envoyée.");
             res.status(200).send(data);
         }
     });
@@ -35,111 +38,88 @@ routes.get('/images/icon.png', function(req, res, next) {
 
 // Validation locale des configurations 
 var validateConfigurations = function(requestPayload, pathEndpoint) {
-    console.log(`Validation des données reçues pour ${pathEndpoint}`);
+    console.log(`[VALIDATION] Validation des données reçues pour ${pathEndpoint}`);
     
     if (!requestPayload || Object.keys(requestPayload).length === 0) {
-        console.error("Erreur : Données vides !");
+        console.error("[ERROR] Données vides!");
         return { success: false, message: "Données invalides ou absentes." };
     }
 
     if (!requestPayload.inArguments || !Array.isArray(requestPayload.inArguments)) {
-        console.error("Erreur : inArguments est manquant ou incorrect.");
-        return { success: false, message: "Champ inArguments invalide." };
+        console.error("[ERROR] inArguments est manquant ou incorrect.");
+        return { success: false, message: "Champ 'inArguments' invalide." };
     }
 
     for (const arg of requestPayload.inArguments) {
         if (!arg || typeof arg !== "object") {
-            console.error("Erreur : Un élément de inArguments n est pas un objet valide.");
-            return { success: false, message: "Format incorrect dans inArguments." };
+            console.error("[ERROR] Un élément de 'inArguments' n'est pas un objet valide.");
+            return { success: false, message: "Format incorrect dans 'inArguments'." };
         }
     }
 
-    console.log("Validation réussie !");
+    console.log("[SUCCESS] Validation réussie !");
     return { success: true, message: "Données valides." };
 };
 
 // POST request for execution
 routes.post('/execute', function(req, res, next) {
+    console.log("[POST] /execute - Requête reçue", req.body);
+    
     var reqPayload = req.body;
-    var inArgsReqPayload = reqPayload.inArguments;
-    var args = {};
+    if (!reqPayload || !reqPayload.inArguments || !Array.isArray(reqPayload.inArguments)) {
+        console.error("[ERROR] Bad Request. inArguments est manquant ou incorrect.");
+        return res.status(400).json({ "error": "Bad Request. inArguments est manquant ou incorrect." });
+    }
 
-    // Extraire les données reçues
-    for (var i = 0; i < inArgsReqPayload.length; i++) {
-        var mc_val = inArgsReqPayload[i];
+    var args = {};
+    for (const mc_val of reqPayload.inArguments) {
         var mc_val_keys = Object.keys(mc_val);
         
-        if (mc_val_keys.length > 1 || mc_val_keys.length === 0) {
-            return res.status(400).json({"error": "Bad Request. (Malformed data)"});
+        if (mc_val_keys.length !== 1) {
+            console.error("[ERROR] Bad Request. Malformed data in inArguments", mc_val);
+            return res.status(400).json({ "error": "Bad Request. (Malformed data in inArguments)" });
         } else {
-            if (mc_val_keys[0] === "keyvalstatic" || mc_val_keys[0] === "keyvaldynamic") {
-                args["keyvalpair"] = (args["keyvalpair"] || "") + mc_val[mc_val_keys[0]];
-            } else {
-                args[mc_val_keys[0]] = mc_val[mc_val_keys[0]];
-            }
+            args[mc_val_keys[0]] = mc_val[mc_val_keys[0]];
         }
     }
 
+    console.log("[INFO] Arguments extraits:", args);
+
     // Validation des données
-    const validationResult = validateConfigurations(args, "/execute");
+    const validationResult = validateConfigurations(reqPayload, "/execute");
     if (!validationResult.success) {
+        console.error("[ERROR] Validation échouée.", validationResult.message);
         return res.status(400).json({ error: validationResult.message });
     }
 
     var id = Math.floor(Math.random() * 1000);
+    console.log("[SUCCESS] ID généré:", id);
     res.status(201).json({ "someExtraId": id });
 });
 
-// POST request for save
-routes.post('/save', function(req, res, next) {
-    const validationResult = validateConfigurations(req.body, "/save");
-    if (!validationResult.success) {
-        return res.status(400).json({ error: validationResult.message });
-    }
-    res.status(200).json({ 'activity': 'Save' });
-});
-
-// POST request for validate
-routes.post('/validate', function(req, res, next) {
-    const validationResult = validateConfigurations(req.body, "/validate");
-    if (!validationResult.success) {
-        return res.status(400).json({ error: validationResult.message });
-    }
-    res.status(200).json({ 'activity': 'Validate' });
-});
-
-// POST request for stop
-routes.post('/stop', function(req, res, next) {
-    const validationResult = validateConfigurations(req.body, "/stop");
-    if (!validationResult.success) {
-        return res.status(400).json({ error: validationResult.message });
-    }
-    res.status(200).json({ 'activity': 'Stop' });
-});
-
-// POST request for publish
-routes.post('/publish', function(req, res, next) {
-    const validationResult = validateConfigurations(req.body, "/publish");
-    if (!validationResult.success) {
-        return res.status(400).json({ error: validationResult.message });
-    }
-    res.status(200).json({ 'activity': 'Publish' });
-});
-
-// POST request for sendJson
-routes.post('/sendJson', function(req, res, next) {
-    const validationResult = validateConfigurations(req.body, "/sendJson");
-    if (!validationResult.success) {
-        return res.status(400).json({ error: validationResult.message });
-    }
-    res.status(200).json({ 'isSuccess': true });
+// Routes POST pour save, validate, stop, publish, sendJson, processData
+const postEndpoints = ["save", "validate", "stop", "publish", "sendJson"];
+postEndpoints.forEach(endpoint => {
+    routes.post(`/${endpoint}`, function(req, res, next) {
+        console.log(`[POST] /${endpoint} - Requête reçue`, req.body);
+        const validationResult = validateConfigurations(req.body, `/${endpoint}`);
+        if (!validationResult.success) {
+            console.error(`[ERROR] Validation échouée pour /${endpoint}`);
+            return res.status(400).json({ error: validationResult.message });
+        }
+        console.log(`[SUCCESS] Requête /${endpoint} validée.`);
+        res.status(200).json({ 'activity': endpoint.charAt(0).toUpperCase() + endpoint.slice(1) });
+    });
 });
 
 // POST request for processData (génération d’un ID)
 routes.post('/processData', function(req, res, next) {
+    console.log("[POST] /processData - Génération d'un ID");
     var id = Math.floor(Math.random() * 1000);
+    console.log("[SUCCESS] ID généré:", id);
     res.status(200).json({ "idVal": id });
 });
 
 // Export des routes
 module.exports = routes;
+console.log("[SERVER] Routes chargées avec succès.");
